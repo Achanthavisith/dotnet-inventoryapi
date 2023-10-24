@@ -16,18 +16,18 @@ namespace dotnet_inventoryapi.Models
         
         [BsonElement("name")]
         public string Name { get; set; }
-        
-        [BsonElement("category")]
-        public string Category { get; set; }
-        
+
         [BsonElement("quantity")]
         public int Quantity { get; set; }
-        
-        [BsonElement("Usage")]
+
+        [BsonElement("category")]
+        public string Category { get; set; }
+
+        [BsonElement("usage")]
         public int Usage { get; set; }
 
-        [BsonIgnore]
-        [JsonIgnore]
+        [SwaggerSchema(ReadOnly = true)]
+        [BsonElement("__v")]
         public int Version { get; set; }
     }
 }

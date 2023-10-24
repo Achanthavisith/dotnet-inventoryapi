@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace dotnet_inventoryapi.Models
@@ -13,17 +14,20 @@ namespace dotnet_inventoryapi.Models
     }
     public class User
     {
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [SwaggerSchema(ReadOnly = true)]
+        [BsonElement("id")]
         public string? Id { get; set; }
 
         [BsonElement("email")]
+        [Required(ErrorMessage = "The email address is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
         [BsonElement("password")]
-        [SwaggerSchema(WriteOnly = true)]
-        public string Password { private get; set; }
+        public string Password { get; set; }
 
         [BsonElement("role")]
         public UserRole Role { get; set; }

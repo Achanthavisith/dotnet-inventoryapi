@@ -1,8 +1,8 @@
 ﻿using dotnet_inventoryapi.DBcontext;
 using dotnet_inventoryapi.Models;
+using dotnet_inventoryapi.Models.utils;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using System.Xml.Linq;
 
 namespace dotnet_inventoryapi.Controllers
 {
@@ -27,7 +27,7 @@ namespace dotnet_inventoryapi.Controllers
         [HttpGet("{id:length(24)}", Name = "GetUser")]
         public async Task<ActionResult<User>> GetUserById(string id)
         {
-            var user = await _mongoDBContext.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
+            var user = await _mongoDBContext.Users.Find(u => u.Id == id).FirstAsync();
 
             if (user == null)
             {
@@ -40,6 +40,15 @@ namespace dotnet_inventoryapi.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> CreateUser(User user)
         {
+            var existingUser = await _mongoDBContext.Users.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
+
+            if (existingUser != null)
+            {
+                return Problem("User with that email already exists.");
+            }
+
+            user.Password = PasswordHasher.HashPassword(user.Password);
+
             await _mongoDBContext.Users.InsertOneAsync(user);
             return CreatedAtRoute("GetUser", new { id = user.Id }, user);
         }
