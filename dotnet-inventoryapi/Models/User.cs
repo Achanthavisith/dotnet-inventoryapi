@@ -18,6 +18,7 @@ namespace dotnet_inventoryapi.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonElement("id")]
+        [StringLength(0, ErrorMessage = "Id is Auto Generated")]
         [SwaggerSchema(ReadOnly = true)]
         public string? Id { get; set; }
 

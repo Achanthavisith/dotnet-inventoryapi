@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace dotnet_inventoryapi.Models
 {
@@ -8,6 +9,7 @@ namespace dotnet_inventoryapi.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+        [StringLength(0, ErrorMessage = "Id is Auto Generated")]
         [SwaggerSchema(ReadOnly = true)]
         [BsonElement("id")]
         public string? Id { get; set; }
