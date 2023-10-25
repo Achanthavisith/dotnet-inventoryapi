@@ -1,6 +1,6 @@
 ﻿using dotnet_inventoryapi.DBcontext;
 using dotnet_inventoryapi.Models;
-using dotnet_inventoryapi.Models.utils;
+using dotnet_inventoryapi.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;

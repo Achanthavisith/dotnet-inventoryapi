@@ -5,9 +5,8 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using dotnet_inventoryapi.Models;
-using dotnet_inventoryapi.Models.utils;
 using dotnet_inventoryapi.DBcontext;
-using Newtonsoft.Json.Linq;
+using dotnet_inventoryapi.Utils;
 
 namespace dotnet_inventoryapi.Controllers
 {

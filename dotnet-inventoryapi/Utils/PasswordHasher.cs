@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 
-namespace dotnet_inventoryapi.Models.utils
+namespace dotnet_inventoryapi.Utils
 {
     public static class PasswordHasher
     {
