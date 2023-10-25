@@ -17,8 +17,8 @@ namespace dotnet_inventoryapi.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [SwaggerSchema(ReadOnly = true)]
         [BsonElement("id")]
+        [SwaggerSchema(ReadOnly = true)]
         public string? Id { get; set; }
 
         [BsonElement("email")]

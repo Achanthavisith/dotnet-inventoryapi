@@ -29,5 +29,6 @@ namespace dotnet_inventoryapi.DBcontext
         public IMongoCollection<Product> Products => _database.GetCollection<Product>("products");
         public IMongoCollection<User> Users => _database.GetCollection<User>("users");
 
+        public IMongoCollection<Categories> Categories => _database.GetCollection<Categories>("categories");
     }
 }

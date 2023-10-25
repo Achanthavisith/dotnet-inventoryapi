@@ -1,7 +1,6 @@
 using dotnet_inventoryapi.DBcontext;
 using dotnet_inventoryapi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -11,9 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDbSettings"));
-builder.Services.AddSingleton<MongoDBContext>();
 
-builder.Services.AddControllers();
+builder.Services.AddSingleton<MongoDBContext>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -28,9 +26,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         ValidateIssuer = true,
         ValidateLifetime = true,
+        ValidateAudience = false,
         ValidateIssuerSigningKey = true
     };
 });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -38,15 +41,39 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.EnableAnnotations();
-}
-);
+
+    // Include JWT bearer token in Swagger UI
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
+});
+
 
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 app.UseSwagger();
+
 app.UseSwaggerUI(c =>
 {
     // Configure Swagger UI to use JWT
@@ -57,6 +84,8 @@ app.UseSwaggerUI(c =>
 
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

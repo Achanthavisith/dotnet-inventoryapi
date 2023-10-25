@@ -6,6 +6,7 @@ using MongoDB.Driver;
 
 namespace dotnet_inventoryapi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/products")]
     public class ProductsController : ControllerBase
@@ -18,9 +19,9 @@ namespace dotnet_inventoryapi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public ActionResult<IEnumerable<Product>> GetProducts()
         {
-            var products = await _mongoDBContext.Products.Find(product => true).ToListAsync();
+            var products = _mongoDBContext.Products.Find(product => true).ToList();
             return Ok(products);
         }
 
@@ -38,15 +39,15 @@ namespace dotnet_inventoryapi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public ActionResult<Product> CreateProduct(Product product)
         {
-            await _mongoDBContext.Products.InsertOneAsync(product);
+            _mongoDBContext.Products.InsertOne(product);
 
             return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult UpdateProduct(string id, Product updatedProduct)
+        public ActionResult<Product> UpdateProduct(string id, Product updatedProduct)
         {
             var existingProduct = _mongoDBContext.Products.FindOneAndUpdate(
                 Builders<Product>.Filter.Eq(p => p.Id, id),
@@ -67,7 +68,7 @@ namespace dotnet_inventoryapi.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult DeleteProduct(string id)
+        public ActionResult<Product> DeleteProduct(string id)
         {
             var result = _mongoDBContext.Products.DeleteOne(p => p.Id == id);
 
